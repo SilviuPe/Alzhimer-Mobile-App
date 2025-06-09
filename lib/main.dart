@@ -65,12 +65,12 @@ class MyApp extends StatelessWidget {
         'therapy-and-recreation-options-page/guided-drawing-app' : (context) => SimpleDrawingTool(),
         'therapy-and-recreation-options-page/relaxation-breathing-coach' : (context) => BreathingExercisePage(),
         'therapy-and-recreation-options-page/smart-garden-app' : (context) => SmartGardenAppPage(),
-        'therapy-and-recreation-options-page/virtual-pet-companion': (context) => VirtualPetCompanionPage(),
+        'therapy-and-recreation-options-page/virtual-pet-companion': (BuildContext context) => VirtualPetCompanionPage(),
 
         '/accessibility-and-medical': (context) => AccessibilityAndMedicalRoutes(),
         'accessibility-and-medical/ai-symptom-reporter': (context) => AISymptomReporterPage(),
         'accessibility-and-medical/hearing-aid-companion': (context) => HearingAidCompanionPage(),
-        'accessibility-and-medical/live-translation-assistant': (context) => LiveTranslationAssistantPage(),
+        'accessibility-and-medical/live-translation-assistant': (context) => LiveTranslationScreen(),
         'accessibility-and-medical/speech-to-text-notes': (context) => SpeechToTextNotesPage(),
         'accessibility-and-medical/vitals-tracker': (context) => VitalsTrackerPage(),
 

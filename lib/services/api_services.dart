@@ -1,9 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-class ApiService {
-  static const String baseUrl = 'http://10.61.20.4:5000';
-
+class ApiService  {
+  static const String baseUrl = 'http://192.168.0.105:5000';
   // Dashboard: Weather & Location
   static Future<Map<String, dynamic>> fetchDashboard() async {
     final response = await http.get(Uri.parse('$baseUrl/cognitive-support/dashboard'));
@@ -61,6 +60,29 @@ class ApiService {
       return jsonDecode(response.body);
     } else {
       throw Exception('Failed to load dashboard data');
+    }
+  }
+
+
+  static Future<Map<String, dynamic>> translateLiveMessage({
+    required String query,
+    required String src,
+    required String dest,
+  }) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/accessibility-and-medical/live-translation-assistant'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'query': query,
+        'src': src,
+        'dest': dest,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to translate: ${response.body}');
     }
   }
 }

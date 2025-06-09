@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
+import '../../services/api_services.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -18,27 +18,17 @@ class _DashboardPageState extends State<DashboardPage> {
     super.initState();
     fetchWeather();
   }
-
   Future<void> fetchWeather() async {
-    const url = 'http://10.61.20.4:5000/cognitive-support/dashboard'; // Replace with your IP and port
 
     try {
-      final response = await http.get(Uri.parse(url));
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        final location = data['location'];
-        final temp = data['temp'];
+        final responseData = await ApiService.fetchDashboard();
+        final location = responseData['location'];
+        final temp = responseData['temp'];
 
         setState(() {
           weatherDescription = '${temp.toStringAsFixed(1)}°C';
           locationDescription = location;
         });
-      } else {
-        setState(() {
-          weatherDescription = 'Failed to fetch weather (${response.statusCode})';
-          locationDescription = 'Failed to fetch weather (${response.statusCode})';
-        });
-      }
     } catch (e) {
       setState(() {
         weatherDescription = 'Error connecting to server';
