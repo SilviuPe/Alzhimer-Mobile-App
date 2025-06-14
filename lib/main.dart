@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'pages/home.dart';
+import 'pages/all_options.dart';
 import 'pages/settings.dart';
 import 'pages/test.dart';
+import 'pages/home.dart';
 
 import 'pages/cognitive_support_and_memory_pages/main.dart';
 import 'pages/cognitive_support_and_memory_pages/dashboard.dart';
@@ -43,9 +44,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'My Android App',
-      initialRoute: '/',
+      initialRoute: '/home',
       routes: {
-        '/': (context) => HomePage(),
+        '/home': (context) => HomePage(),
+        '/all-options': (context) => AllOptions(),
 
         '/cognitive-options-page': (context) => CognitiveHomePage(),
         'cognitive-options-page/settings': (context) => SettingsPage(),

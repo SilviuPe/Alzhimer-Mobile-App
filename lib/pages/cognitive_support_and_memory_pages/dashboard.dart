@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'dart:convert';
 import '../../services/api_services.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -12,11 +12,23 @@ class DashboardPage extends StatefulWidget {
 class _DashboardPageState extends State<DashboardPage> {
   String weatherDescription = 'Loading...';
   String locationDescription = 'Loading...';
+  final FlutterTts flutterTts = FlutterTts();
+
+  void _speak() async {
+    await flutterTts.setLanguage("en-US");
+    await flutterTts.setPitch(1.5);
+    await flutterTts.setSpeechRate(1.5); // Slower for clarity
+    await flutterTts.speak(
+        "Hello! Today is a beautiful day. You're in $locationDescription and the weather is $weatherDescription. How are you feeling?"
+    );
+  }
 
   @override
   void initState() {
     super.initState();
     fetchWeather();
+    flutterTts.awaitSpeakCompletion(true);
+    _speak();
   }
   Future<void> fetchWeather() async {
 

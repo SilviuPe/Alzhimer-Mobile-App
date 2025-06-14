@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ApiService  {
-  static const String baseUrl = 'http://192.168.0.105:5000';
+  static const String baseUrl = 'http://145.223.101.111:5001';
   // Dashboard: Weather & Location
   static Future<Map<String, dynamic>> fetchDashboard() async {
     final response = await http.get(Uri.parse('$baseUrl/cognitive-support/dashboard'));
@@ -46,6 +46,16 @@ class ApiService  {
   // What Am I Doing (WAID)
   static Future<Map<String, dynamic>> fetchWhatAmIDoing() async {
     final response = await http.get(Uri.parse('$baseUrl/cognitive-support/what-am-i-doing'));
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to load WAID data');
+    }
+  }
+
+
+  static Future<Map<String, dynamic>> fetchMemoryFlasbacks() async {
+    final response = await http.get(Uri.parse('$baseUrl/home/image-flasback'));
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
