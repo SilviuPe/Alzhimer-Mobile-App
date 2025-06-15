@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/services/api_services.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class LiveTranslationScreen extends StatefulWidget {
   @override
@@ -13,8 +14,16 @@ class _LiveTranslationScreenState extends State<LiveTranslationScreen> {
   String _targetLang = 'fr';
   bool _loading = false;
   String? _error;
-
   final List<String> _languages = ['en', 'ro', 'fr', 'es', 'de', 'it'];
+
+  late stt.SpeechToText _speech;
+  bool _isListening = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _speech = stt.SpeechToText();
+  }
 
   Future<void> _translate() async {
     setState(() {
@@ -43,6 +52,31 @@ class _LiveTranslationScreenState extends State<LiveTranslationScreen> {
     }
   }
 
+  void _listen() async {
+    if (!_isListening) {
+      bool available = await _speech.initialize(
+        onStatus: (val) => print('Status: $val'),
+        onError: (val) => print('Error: $val'),
+      );
+
+      if (available) {
+        setState(() => _isListening = true);
+        _speech.listen(
+          localeId: _sourceLang,
+          onResult: (val) {
+            setState(() {
+              _textController.text = val.recognizedWords;
+              if (!_speech.isListening) _isListening = false;
+            });
+          },
+        );
+      }
+    } else {
+      setState(() => _isListening = false);
+      _speech.stop();
+    }
+  }
+
   Widget _buildDropdown(String value, ValueChanged<String?> onChanged) {
     return DropdownButton<String>(
       value: value,
@@ -66,7 +100,13 @@ class _LiveTranslationScreenState extends State<LiveTranslationScreen> {
           children: [
             TextField(
               controller: _textController,
-              decoration: InputDecoration(labelText: 'Enter text'),
+              decoration: InputDecoration(
+                labelText: 'Enter text or use microphone',
+                suffixIcon: IconButton(
+                  icon: Icon(_isListening ? Icons.mic : Icons.mic_none),
+                  onPressed: _listen,
+                ),
+              ),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

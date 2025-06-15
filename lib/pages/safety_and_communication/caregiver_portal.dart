@@ -55,6 +55,10 @@ class _CaregiverPortalPage extends State<CaregiverPortalPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Caregiver Portal"),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

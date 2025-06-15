@@ -13,7 +13,7 @@ class AllOptions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Home Page')),
+      appBar: AppBar(title: Text('Options')),
       body: ListView.builder(
         padding: EdgeInsets.all(16),
         itemCount: pages.length,

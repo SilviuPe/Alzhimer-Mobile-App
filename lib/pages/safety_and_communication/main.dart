@@ -10,7 +10,13 @@ class SafetyAndSupportRoutes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Safety & Support')),
+      appBar: AppBar(
+        title: Text("Caregiver Portal"),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
       body: ListView.builder(
         padding: EdgeInsets.all(16),
         itemCount: pages.length,
