@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 
+import '../../global/speaker.dart';
+
 class VirtualPetCompanionPage extends StatefulWidget {
   const VirtualPetCompanionPage({Key? key}) : super(key: key);
 
@@ -13,6 +15,24 @@ class _PetGameScreenState extends State<VirtualPetCompanionPage> {
   int hunger = 50; // 0 = full, 100 = starving
   int happiness = 50; // 0 = sad, 100 = very happy
   int energy = 50; // 0 = tired, 100 = full of energy
+
+
+
+  @override
+  void dispose() {
+    Speaker.stop();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    generateAudioOutput();
+  }
+
+  Future<void> generateAudioOutput() async {
+    await Speaker.speak("Meet your pet Fluffy, please, take care of him!");
+  }
 
   void feed() {
     setState(() {

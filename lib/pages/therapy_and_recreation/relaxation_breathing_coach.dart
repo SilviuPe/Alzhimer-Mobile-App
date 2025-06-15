@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-
-void main() => runApp(const MaterialApp(home: BreathingExercisePage()));
+import '../../global/speaker.dart'; // Adjust path based on your project structure
 
 class BreathingExercisePage extends StatefulWidget {
   const BreathingExercisePage({super.key});
@@ -37,38 +36,47 @@ class _BreathingExercisePageState extends State<BreathingExercisePage>
   }
 
   void _startExercise() {
-    Future.delayed(const Duration(seconds: 2), () {
-      setState(() {
-        _instruction = _cycle[_cycleIndex];
-      });
+    Future.delayed(const Duration(seconds: 2), () async {
       _controller.repeat(reverse: true);
+      await _setInstructionAndSpeak(_cycle[_cycleIndex]);
 
-      _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      _timer = Timer.periodic(const Duration(seconds: 1), (timer) async {
         setState(() {
           _elapsed++;
           _phaseElapsed++;
-
-          if (_elapsed >= _totalTime) {
-            _instruction = "Well done! 🎉";
-            _controller.stop();
-            _timer?.cancel();
-            return;
-          }
-
-          if (_phaseElapsed >= 4) {
-            _phaseElapsed = 0;
-            _cycleIndex = (_cycleIndex + 1) % _cycle.length;
-            _instruction = _cycle[_cycleIndex];
-          }
         });
+
+        if (_elapsed >= _totalTime) {
+          _controller.stop();
+          _timer?.cancel();
+          await Speaker.speak("Well done! 🎉");
+          setState(() {
+            _instruction = "Well done! 🎉";
+          });
+          return;
+        }
+
+        if (_phaseElapsed >= 4) {
+          _phaseElapsed = 0;
+          _cycleIndex = (_cycleIndex + 1) % _cycle.length;
+          await _setInstructionAndSpeak(_cycle[_cycleIndex]);
+        }
       });
     });
+  }
+
+  Future<void> _setInstructionAndSpeak(String message) async {
+    setState(() {
+      _instruction = message;
+    });
+    await Speaker.speak(message);
   }
 
   @override
   void dispose() {
     _controller.dispose();
     _timer?.cancel();
+    Speaker.stop();
     super.dispose();
   }
 

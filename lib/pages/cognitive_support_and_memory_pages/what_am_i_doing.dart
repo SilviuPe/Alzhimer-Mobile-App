@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../services/api_services.dart'; // Adjust the path to your ApiService file
+import '../../global/speaker.dart';
 
 class WhatAmIDoingPage extends StatefulWidget {
   const WhatAmIDoingPage({super.key});
@@ -9,7 +10,7 @@ class WhatAmIDoingPage extends StatefulWidget {
 }
 
 class _WhatAmIDoingPageState extends State<WhatAmIDoingPage> {
-  String? _activityMessage;
+  String _activityMessage = '';
   bool _isLoading = false;
   String? _error;
 
@@ -34,11 +35,19 @@ class _WhatAmIDoingPageState extends State<WhatAmIDoingPage> {
       });
     }
 
+    Speaker.speak(_activityMessage);
+
     if (_activityMessage != null) {
       _showContextReminder(context, _activityMessage!);
     } else if (_error != null) {
       _showContextReminder(context, _error!);
     }
+  }
+
+  @override
+  void dispose() {
+    Speaker.stop();
+    super.dispose();
   }
 
   void _showContextReminder(BuildContext context, String message) {

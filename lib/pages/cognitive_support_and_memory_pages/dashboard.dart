@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../services/api_services.dart';
-import 'package:flutter_tts/flutter_tts.dart';
+import '../../global/speaker.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -12,23 +12,27 @@ class DashboardPage extends StatefulWidget {
 class _DashboardPageState extends State<DashboardPage> {
   String weatherDescription = 'Loading...';
   String locationDescription = 'Loading...';
-  final FlutterTts flutterTts = FlutterTts();
+  // final FlutterTts flutterTts = FlutterTts();
 
-  void _speak() async {
-    await flutterTts.setLanguage("en-US");
-    await flutterTts.setPitch(1.5);
-    await flutterTts.setSpeechRate(1.5); // Slower for clarity
-    await flutterTts.speak(
-        "Hello! Today is a beautiful day. You're in $locationDescription and the weather is $weatherDescription. How are you feeling?"
-    );
+  // void _speak(String query) async {
+  //   await flutterTts.setLanguage("en-US");
+  //   await flutterTts.setPitch(1.5);
+  //   await flutterTts.setSpeechRate(1); // Slower for clarity
+  //   await flutterTts.speak(query);
+  // }
+
+  @override
+  void dispose() {
+    Speaker.stop();
+    super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
     fetchWeather();
-    flutterTts.awaitSpeakCompletion(true);
-    _speak();
+    // flutterTts.awaitSpeakCompletion(true);
+    // _speak("Hello! Today is a beautiful day. You're in $locationDescription and the weather is $weatherDescription. How are you feeling?");
   }
   Future<void> fetchWeather() async {
 
@@ -41,6 +45,8 @@ class _DashboardPageState extends State<DashboardPage> {
           weatherDescription = '${temp.toStringAsFixed(1)}°C';
           locationDescription = location;
         });
+
+        Speaker.speak("Hello! Today is a beautiful day. You're in $locationDescription and the weather is $weatherDescription. How are you feeling?");
     } catch (e) {
       setState(() {
         weatherDescription = 'Error connecting to server';

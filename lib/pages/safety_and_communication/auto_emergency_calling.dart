@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:permission_handler/permission_handler.dart';
+import '../../global/speaker.dart';
 
 class AutoEmergencyCallingPage extends StatefulWidget {
   @override
@@ -19,6 +20,25 @@ class _AutoEmergencyCallingPage extends State<AutoEmergencyCallingPage> {
     super.initState();
     _speech = stt.SpeechToText();
     _initSpeech();
+    generateOutput();
+  }
+
+  @override
+  void dispose() {
+    Speaker.stop();
+    super.dispose();
+  }
+
+  Future<void> generateOutput() async {
+    await Speaker.speak("Please say the following phrases in order to call 911:");
+
+    for (int i =0; i<panicPhrases.length; i++) {
+      if (i == panicPhrases.length-1) {
+        await Speaker.speak('or');
+      }
+      await Speaker.speak(panicPhrases[i]);
+
+    }
   }
 
   Future<void> _initSpeech() async {

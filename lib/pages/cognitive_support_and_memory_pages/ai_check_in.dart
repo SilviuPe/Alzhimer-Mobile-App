@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../services/api_services.dart';
+import '../../global/speaker.dart';
 
 class AICheckInPage extends StatefulWidget {
   const AICheckInPage({super.key});
@@ -15,10 +16,19 @@ class _AICheckInPage extends State<AICheckInPage> {
   String _error = '';
 
   @override
+  void dispose() {
+    Speaker.stop();
+    super.dispose();
+  }
+
+  @override
   void initState() {
     super.initState();
     fetchQuestionsData();
   }
+
+
+
 
   void fetchQuestionsData() async {
     setState(() {
@@ -28,8 +38,13 @@ class _AICheckInPage extends State<AICheckInPage> {
 
       final data = await ApiService.fetchAiCheckIn();
       setState(() {
-        questions = questions = List<String>.from(data['questions']);
+        questions = List<String>.from(data['questions']);
       });
+
+      for (final question in questions) {
+        await Speaker.speak(question);
+        Future.delayed(Duration(seconds: 2));
+      }
 
 
     } catch(e) {

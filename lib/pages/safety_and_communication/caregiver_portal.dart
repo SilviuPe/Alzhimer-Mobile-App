@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../services/api_services.dart';
+import '../../global/speaker.dart';
 
 class CaregiverPortalPage extends StatefulWidget {
   @override
@@ -26,6 +27,19 @@ class _CaregiverPortalPage extends State<CaregiverPortalPage> {
     fetchReminders();
   }
 
+  @override
+  void dispose() {
+    Speaker.stop();
+    super.dispose();
+  }
+  
+  Future<void> generateAudioOutput() async {
+    await Speaker.speak("You have the following reminders:");
+    for (int i = 0; i < reminders.length; i++) {
+      await Speaker.speak(reminders[i]);
+    }
+    await Speaker.speak("Please, make sure you do not forget about them.");
+  }
   void fetchReminders() async {
     setState(() {
       _isLoadingReminders = true;
@@ -40,7 +54,7 @@ class _CaregiverPortalPage extends State<CaregiverPortalPage> {
           if (data['next'] != null) 'Next ${data['next']}',
         ];
       });
-
+      generateAudioOutput();
 
     } catch(e) {
       setState(() {

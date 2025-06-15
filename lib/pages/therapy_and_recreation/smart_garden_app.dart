@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import '../../global/speaker.dart';
 
 class Plant {
   String name;
@@ -28,6 +29,23 @@ class _SmartGardenAppPageState extends State<SmartGardenAppPage> {
   final List<Plant> garden = [];
   final rand = Random();
   final plantTypes = ['Tomato', 'Carrot', 'Sunflower'];
+
+
+  @override
+  void dispose() {
+    Speaker.stop();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    generateAudioOutput();
+  }
+
+  Future<void> generateAudioOutput() async {
+    await Speaker.speak("This is your beautiful garden, you can plant, water and harvest. Have fun!");
+  }
 
   void plantNew() {
     final chosen = plantTypes[rand.nextInt(plantTypes.length)];

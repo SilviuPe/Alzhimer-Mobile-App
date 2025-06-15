@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../services/api_services.dart'; // Make sure this path matches your project structure
+import '../../global/speaker.dart';
 
 void main() => runApp(const MaterialApp(home: NumberSequencePuzzle()));
 
@@ -22,6 +23,24 @@ class _NumberSequencePuzzleState extends State<NumberSequencePuzzle> {
     _loadPuzzle();
   }
 
+  @override
+  void dispose() {
+    Speaker.stop();
+    super.dispose();
+  }
+
+  Future<void> generateAudioOutputForQuestion() async {
+    await Speaker.speak("What number comes next in the sequence? ${sequence}");
+  }
+
+  Future<void> generateAudioOutputForWrongAnswer() async {
+    await Speaker.speak("Not quite. Try again.");
+  }
+
+  Future<void> generateAudioOutputForCorrectAnswer() async {
+    await Speaker.speak("Great job! The next number was ${correctAnswer}");
+  }
+
   Future<void> _loadPuzzle() async {
     setState(() => isLoading = true);
     try {
@@ -33,6 +52,9 @@ class _NumberSequencePuzzleState extends State<NumberSequencePuzzle> {
       options =  List<int>.from(data['options'])..shuffle();
 
       setState(() => isLoading = false);
+
+      generateAudioOutputForQuestion();
+
     } catch (e) {
       print('Failed to load puzzle: $e');
       setState(() => isLoading = false);
@@ -41,7 +63,12 @@ class _NumberSequencePuzzleState extends State<NumberSequencePuzzle> {
 
   void _checkAnswer(int selected) {
     final bool isCorrect = selected == correctAnswer;
-
+    if (isCorrect) {
+      generateAudioOutputForCorrectAnswer();
+    }
+    else {
+      generateAudioOutputForWrongAnswer();
+    }
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
