@@ -15,7 +15,7 @@ class ApiService  {
 
   // AI Check-In
   static Future<Map<String, dynamic>> fetchAiCheckIn() async {
-    final response = await http.get(Uri.parse('$baseUrl/cognitive-support/ai-check-in'));
+    final response = await http.get(Uri.parse('$baseUrl/cognitive-support/ai-check'));
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {

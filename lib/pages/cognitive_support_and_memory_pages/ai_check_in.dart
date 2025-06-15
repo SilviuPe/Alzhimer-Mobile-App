@@ -1,11 +1,46 @@
 import 'package:flutter/material.dart';
+import '../../services/api_services.dart';
 
-class AICheckInPage extends StatelessWidget {
-  final List<String> questions = [
-    'How are you feeling today?',
-    'Did you sleep well last night?',
-    'Do you have any pain or discomfort?',
-  ];
+class AICheckInPage extends StatefulWidget {
+  const AICheckInPage({super.key});
+
+  @override
+  State<AICheckInPage> createState() => _AICheckInPage();
+}
+
+class _AICheckInPage extends State<AICheckInPage> {
+
+  List<String> questions = [];
+  bool _isLoading = false;
+  String _error = '';
+
+  @override
+  void initState() {
+    super.initState();
+    fetchQuestionsData();
+  }
+
+  void fetchQuestionsData() async {
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+
+      final data = await ApiService.fetchAiCheckIn();
+      setState(() {
+        questions = questions = List<String>.from(data['questions']);
+      });
+
+
+    } catch(e) {
+      setState(() {
+        print(e);
+        _error = "An error occured trying to load the questions.";
+      });
+      print(_error);
+    }
+    print(questions);
+  }
 
   @override
   Widget build(BuildContext context) {
