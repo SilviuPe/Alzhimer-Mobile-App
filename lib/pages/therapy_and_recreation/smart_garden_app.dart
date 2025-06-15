@@ -55,7 +55,8 @@ class _SmartGardenAppPageState extends State<SmartGardenAppPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('🌿 Smart Garden'),
-        centerTitle: true,
+        backgroundColor: Colors.deepPurple,
+        foregroundColor: Colors.white,
       ),
       body: Column(
         children: [

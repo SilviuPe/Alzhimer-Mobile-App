@@ -4,7 +4,9 @@ class HearingAidCompanionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Hearing Aid Companion')),
+      appBar: AppBar(title: Text('Hearing Aid Companion'),
+        backgroundColor: Colors.deepPurple,
+        foregroundColor: Colors.white,),
       body: Padding(
         padding: EdgeInsets.all(16),
         child: Card(

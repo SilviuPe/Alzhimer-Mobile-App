@@ -16,7 +16,9 @@ class TherapyAndRecreationRoutes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Therapy & Recreation')),
+      appBar: AppBar(title: Text('Therapy & Recreation'),
+        backgroundColor: Colors.deepPurple,
+        foregroundColor: Colors.white,),
       body: ListView.builder(
         padding: EdgeInsets.all(16),
         itemCount: pages.length,

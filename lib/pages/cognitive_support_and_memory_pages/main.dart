@@ -12,7 +12,9 @@ class CognitiveHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Cognitive Support App')),
+      appBar: AppBar(title: Text('Cognitive Support App'),
+        backgroundColor: Colors.deepPurple,
+        foregroundColor: Colors.white,),
       body: ListView.builder(
         padding: EdgeInsets.all(16),
         itemCount: pages.length,

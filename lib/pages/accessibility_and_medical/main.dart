@@ -12,7 +12,9 @@ class AccessibilityAndMedicalRoutes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Accessibility & Medical')),
+      appBar: AppBar(title: Text('Accessibility & Medical'),
+        backgroundColor: Colors.deepPurple,
+        foregroundColor: Colors.white,),
       body: ListView.builder(
         padding: EdgeInsets.all(16),
         itemCount: pages.length,

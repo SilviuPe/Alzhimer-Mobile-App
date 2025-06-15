@@ -4,7 +4,9 @@ class AISymptomReporterPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('AI Symptom Reporter')),
+      appBar: AppBar(title: Text('AI Symptom Reporter'),
+        backgroundColor: Colors.deepPurple,
+        foregroundColor: Colors.white,),
       body: Padding(
         padding: EdgeInsets.all(16),
         child: Card(

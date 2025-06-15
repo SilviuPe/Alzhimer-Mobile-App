@@ -93,6 +93,8 @@ class _SpeechToTextNotesPage extends State<SpeechToTextNotesPage> {
           icon: Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),
+        backgroundColor: Colors.deepPurple,
+        foregroundColor: Colors.white,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

@@ -55,6 +55,8 @@ class _CaregiverPortalPage extends State<CaregiverPortalPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Caregiver Portal"),
+        backgroundColor: Colors.deepPurple,
+        foregroundColor: Colors.white,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),

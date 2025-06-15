@@ -70,7 +70,8 @@ class _PetGameScreenState extends State<VirtualPetCompanionPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Virtual Pet Game'),
-        centerTitle: true,
+        backgroundColor: Colors.deepPurple,
+        foregroundColor: Colors.white,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

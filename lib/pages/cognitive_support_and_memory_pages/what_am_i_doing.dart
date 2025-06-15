@@ -73,7 +73,6 @@ class _WhatAmIDoingPageState extends State<WhatAmIDoingPage> {
         title: const Text('What Am I Doing?'),
         backgroundColor: Colors.deepPurple,
         foregroundColor: Colors.white,
-        centerTitle: true,
       ),
       body: Center(
         child: Card(

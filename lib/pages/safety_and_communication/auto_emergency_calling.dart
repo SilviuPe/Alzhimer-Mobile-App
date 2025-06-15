@@ -70,7 +70,9 @@ class _AutoEmergencyCallingPage extends State<AutoEmergencyCallingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Emergency Voice Detection')),
+      appBar: AppBar(title: Text('Emergency Voice Detection'),
+        backgroundColor: Colors.deepPurple,
+        foregroundColor: Colors.white,),
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(

@@ -4,7 +4,9 @@ class VitalsTrackerPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Vitals Tracker')),
+      appBar: AppBar(title: Text('Vitals Tracker'),
+        backgroundColor: Colors.deepPurple,
+        foregroundColor: Colors.white,),
       body: Padding(
         padding: EdgeInsets.all(16),
         child: Card(

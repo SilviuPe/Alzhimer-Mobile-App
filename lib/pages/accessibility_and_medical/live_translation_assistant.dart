@@ -93,7 +93,9 @@ class _LiveTranslationScreenState extends State<LiveTranslationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Live Translator')),
+      appBar: AppBar(title: Text('Live Translator'),
+        backgroundColor: Colors.deepPurple,
+        foregroundColor: Colors.white,),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

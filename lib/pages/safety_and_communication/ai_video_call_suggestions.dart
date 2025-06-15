@@ -20,7 +20,9 @@ class AIVideoCallSuggestionsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Video Call Suggestions")),
+      appBar: AppBar(title: Text("Video Call Suggestions"),
+        backgroundColor: Colors.deepPurple,
+        foregroundColor: Colors.white,),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
