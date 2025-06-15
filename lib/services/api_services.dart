@@ -82,6 +82,34 @@ class ApiService  {
     }
   }
 
+  static Future<Map<String, dynamic>> fetchNotes() async {
+    final response = await http.get(Uri.parse('$baseUrl/accessibility-and-medical/speech-notes'));
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to load dashboard data');
+    }
+  }
+
+  static Future<Map<String, dynamic>> sendNotes({
+    required String note,
+  }) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/accessibility-and-medical/speech-notes'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'note' : note
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to translate: ${response.body}');
+    }
+  }
+
+
 
   static Future<Map<String, dynamic>> translateLiveMessage({
     required String query,
