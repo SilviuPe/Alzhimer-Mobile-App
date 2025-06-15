@@ -34,12 +34,9 @@ class _AICheckInPage extends State<AICheckInPage> {
 
     } catch(e) {
       setState(() {
-        print(e);
         _error = "An error occured trying to load the questions.";
       });
-      print(_error);
     }
-    print(questions);
   }
 
   @override

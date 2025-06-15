@@ -73,6 +73,15 @@ class ApiService  {
     }
   }
 
+  static Future<Map<String, dynamic>> fetchReminders() async {
+    final response = await http.get(Uri.parse('$baseUrl/safety_and_communication/caregiver-portal'));
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to load dashboard data');
+    }
+  }
+
 
   static Future<Map<String, dynamic>> translateLiveMessage({
     required String query,
