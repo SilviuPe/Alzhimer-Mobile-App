@@ -3,8 +3,9 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../services/api_services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:google_fonts/google_fonts.dart';
+import '../../services/api_services.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -15,10 +16,11 @@ class _HomeScreenState extends State<HomePage> {
   String janeStatus = "";
   List<String> memoryImagesBase64 = [];
   String memoryDate = "";
-  List<Map<String, String>> contacts = [
-    {"name": "Angelo", "phone": "123456789"},
-    {"name": "Florineiosann", "phone": "+40741949594"},
-    {"name": "Ita", "phone": "555123456"},
+
+  List<Map<String, dynamic>> contacts = [
+    {"name": "Angelo", "phone": "123456789", "imageBytes": null},
+    {"name": "Florineiosann", "phone": "+40741949594", "imageBytes": null},
+    {"name": "Aly", "phone": "555123456", "imageBytes": null},
   ];
 
   bool _isStatusLoading = true;
@@ -33,6 +35,7 @@ class _HomeScreenState extends State<HomePage> {
     super.initState();
     fetchJaneStatus();
     fetchMemoryFlashbacks();
+    fetchContactImages();
   }
 
   void fetchJaneStatus() async {
@@ -62,6 +65,21 @@ class _HomeScreenState extends State<HomePage> {
     return base64Decode(cleanedBase64);
   }
 
+  void fetchContactImages() async {
+    try {
+      final data = await ApiService.fetchContactsImages();
+      final images = data['images'];
+
+      setState(() {
+        contacts[0]['imageBytes'] = decodeBase64Image(images['image_1']);
+        contacts[1]['imageBytes'] = decodeBase64Image(images['image_2']);
+        contacts[2]['imageBytes'] = decodeBase64Image(images['image_3']);
+      });
+    } catch (e) {
+      print("Failed to load contact images: $e");
+    }
+  }
+
   void fetchMemoryFlashbacks() async {
     setState(() {
       _isMemoryStatusLoading = true;
@@ -75,6 +93,7 @@ class _HomeScreenState extends State<HomePage> {
         memoryImagesBase64 = [
           data['images']['image_1'],
           data['images']['image_2'],
+          data['images']['image_3'],
         ].where((img) => img != null && img.toString().isNotEmpty).cast<String>().toList();
       });
     } catch (e) {
@@ -113,15 +132,17 @@ class _HomeScreenState extends State<HomePage> {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: Text("Contact $name"),
+        title: Text("Contact $name", style: GoogleFonts.poppins()),
         actions: [
-          TextButton(
+          TextButton.icon(
             onPressed: () => launchUrl(Uri.parse("tel:$phone")),
-            child: Text("Call"),
+            icon: Icon(Icons.call),
+            label: Text("Call", style: GoogleFonts.poppins()),
           ),
-          TextButton(
+          TextButton.icon(
             onPressed: () => launchUrl(Uri.parse("sms:$phone")),
-            child: Text("Message"),
+            icon: Icon(Icons.sms),
+            label: Text("Message", style: GoogleFonts.poppins()),
           ),
         ],
       ),
@@ -132,17 +153,19 @@ class _HomeScreenState extends State<HomePage> {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: Text("Call someone"),
+        title: Text("Call someone", style: GoogleFonts.poppins()),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             ...contacts.map((c) => ListTile(
-              title: Text(c['name']!),
+              leading: Icon(Icons.person),
+              title: Text(c['name']!, style: GoogleFonts.poppins()),
               onTap: () => launchUrl(Uri.parse("tel:${c['phone']!}")),
             )),
             Divider(),
             ListTile(
-              title: Text("Emergency - 911"),
+              leading: Icon(Icons.warning, color: Colors.red),
+              title: Text("Emergency - 911", style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
               onTap: () => launchUrl(Uri.parse("tel:911")),
             ),
           ],
@@ -178,7 +201,10 @@ class _HomeScreenState extends State<HomePage> {
     final timeStr = DateFormat('h:mm a').format(now);
 
     return Scaffold(
-      appBar: AppBar(title: Text("Home")),
+      appBar: AppBar(
+        title: Text("Home", style: GoogleFonts.poppins(color: Colors.white)),
+        backgroundColor: Colors.deepPurple,
+      ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(screenSize.width * 0.04),
         child: Center(
@@ -188,28 +214,30 @@ class _HomeScreenState extends State<HomePage> {
               Text(
                 "Today is $dateStr\n$timeStr",
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: screenSize.width * 0.055),
+                style: GoogleFonts.poppins(fontSize: screenSize.width * 0.055),
               ),
               SizedBox(height: screenSize.height * 0.02),
-              ElevatedButton(
+              ElevatedButton.icon(
+                icon: Icon(Icons.visibility),
                 onPressed: () {
                   fetchJaneStatus();
                   showDialog(
                     context: context,
                     builder: (_) => AlertDialog(
-                      title: Text("Jane's Status"),
+                      title: Text("Jane's Status", style: GoogleFonts.poppins()),
                       content: Text(
                         !_isStatusLoading
                             ? 'Loading...'
                             : (_error.isNotEmpty ? _error : janeStatus),
+                        style: GoogleFonts.poppins(),
                       ),
                     ),
                   );
                 },
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.deepPurple),
-                child: Text(
+                label: Text(
                   "What is Jane Doing?",
-                  style: TextStyle(color: Colors.white, fontSize: screenSize.width * 0.04),
+                  style: GoogleFonts.poppins(color: Colors.white, fontSize: screenSize.width * 0.04),
                 ),
               ),
               SizedBox(height: screenSize.height * 0.03),
@@ -222,7 +250,7 @@ class _HomeScreenState extends State<HomePage> {
                   padding: const EdgeInsets.only(top: 8.0),
                   child: Text(
                     "Memory flashback $memoryDate",
-                    style: TextStyle(
+                    style: GoogleFonts.poppins(
                       fontSize: screenSize.width * 0.04,
                       fontWeight: FontWeight.w500,
                     ),
@@ -231,7 +259,7 @@ class _HomeScreenState extends State<HomePage> {
               SizedBox(height: screenSize.height * 0.03),
               Text(
                 "Default Options",
-                style: TextStyle(
+                style: GoogleFonts.poppins(
                   fontSize: screenSize.width * 0.04,
                   fontWeight: FontWeight.w500,
                 ),
@@ -240,11 +268,11 @@ class _HomeScreenState extends State<HomePage> {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                    _buildActionButton("Camera", Icons.camera, openCamera),
+                    _buildActionButton("Camera", Icons.camera_alt, openCamera),
                     SizedBox(width: 10),
                     _buildActionButton("Doctor", Icons.local_hospital, openDoctorApp),
                     SizedBox(width: 10),
-                    _buildActionButton("Games", Icons.games, openGames),
+                    _buildActionButton("Games", Icons.videogame_asset, openGames),
                   ],
                 ),
               ),
@@ -253,7 +281,7 @@ class _HomeScreenState extends State<HomePage> {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   "Important Contacts:",
-                  style: TextStyle(
+                  style: GoogleFonts.poppins(
                     fontWeight: FontWeight.bold,
                     fontSize: screenSize.width * 0.045,
                   ),
@@ -264,7 +292,10 @@ class _HomeScreenState extends State<HomePage> {
                 height: screenSize.height * 0.1,
                 child: ListView(
                   scrollDirection: Axis.horizontal,
-                  children: contacts.map((c) {
+                  children: contacts.asMap().entries.map((entry) {
+                    int index = entry.key;
+                    var c = entry.value;
+
                     return GestureDetector(
                       onTap: () => contactOptions(c['name']!, c['phone']!),
                       child: Container(
@@ -278,7 +309,16 @@ class _HomeScreenState extends State<HomePage> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.person, color: Colors.white),
+                            CircleAvatar(
+                              backgroundImage: c['imageBytes'] != null
+                                  ? MemoryImage(c['imageBytes'])
+                                  : null,
+                              radius: 24,
+                              backgroundColor: Colors.white,
+                              child: c['imageBytes'] == null
+                                  ? Icon(Icons.person, color: Colors.grey)
+                                  : null,
+                            ),
                             SizedBox(height: 4),
                             Text(
                               c['name']!,
@@ -303,14 +343,17 @@ class _HomeScreenState extends State<HomePage> {
             IconButton(
               onPressed: () => Navigator.pushNamed(context, '/all-options'),
               icon: Icon(Icons.arrow_back),
+              tooltip: 'Back to Options',
             ),
             IconButton(
               onPressed: () {},
               icon: Icon(Icons.home, color: Colors.green),
+              tooltip: 'Home',
             ),
             IconButton(
               onPressed: openGeneralCall,
               icon: Icon(Icons.phone, color: Colors.red),
+              tooltip: 'Call someone',
             ),
           ],
         ),
@@ -326,7 +369,7 @@ class _HomeScreenState extends State<HomePage> {
         padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       ),
       icon: Icon(icon, size: 16, color: Colors.white),
-      label: Text(label, style: TextStyle(color: Colors.white)),
+      label: Text(label, style: GoogleFonts.poppins(color: Colors.white)),
     );
   }
 }

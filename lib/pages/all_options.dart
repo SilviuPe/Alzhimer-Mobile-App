@@ -1,36 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AllOptions extends StatelessWidget {
-  final List<Map<String, String>> pages = [
-    {'title' : 'Home', 'route' : '/home'},
-    {'title': 'Cognitive Options', 'route': '/cognitive-options-page'},
-    {'title' : 'Safety & Communication', 'route' : '/safety-and-communication-options-page'},
-    {'title': 'Therapy & Recreation', 'route' : '/therapy-and-recreation-options-page'},
-    {'title' : 'Accessibility & Medical', 'route' : '/accessibility-and-medical'}
+  final List<Map<String, dynamic>> pages = [
+    {'title': 'Home', 'route': '/home', 'icon': Icons.home},
+    {'title': 'Cognitive Options', 'route': '/cognitive-options-page', 'icon': Icons.psychology},
+    {'title': 'Safety & Communication', 'route': '/safety-and-communication-options-page', 'icon': Icons.security},
+    {'title': 'Therapy & Recreation', 'route': '/therapy-and-recreation-options-page', 'icon': Icons.sports_handball},
+    {'title': 'Accessibility & Medical', 'route': '/accessibility-and-medical', 'icon': Icons.medical_services},
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Options'),
+      appBar: AppBar(
+        title: Text('Options', style: GoogleFonts.poppins()),
         backgroundColor: Colors.deepPurple,
-        foregroundColor: Colors.white,),
+        foregroundColor: Colors.white,
+      ),
       body: ListView.builder(
         padding: EdgeInsets.all(16),
         itemCount: pages.length,
         itemBuilder: (context, index) => Padding(
           padding: const EdgeInsets.symmetric(vertical: 8),
-          child: ElevatedButton(
+          child: ElevatedButton.icon(
+            icon: Icon(pages[index]['icon'], size: 24),
+            label: Text(
+              pages[index]['title'],
+              style: GoogleFonts.poppins(fontSize: 18),
+            ),
             style: ElevatedButton.styleFrom(
-              padding: EdgeInsets.symmetric(vertical: 16),
+              padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
               backgroundColor: Colors.deepPurple,
               foregroundColor: Colors.white,
-              textStyle: TextStyle(fontSize: 18),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             ),
-            child: Text(pages[index]['title']!),
             onPressed: () {
-              Navigator.pushNamed(context, pages[index]['route']!);
+              Navigator.pushNamed(context, pages[index]['route']);
             },
           ),
         ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../services/api_services.dart';
 import '../../global/speaker.dart';
 
@@ -32,92 +33,126 @@ class _CaregiverPortalPage extends State<CaregiverPortalPage> {
     Speaker.stop();
     super.dispose();
   }
-  
+
   Future<void> generateAudioOutput() async {
     await Speaker.speak("You have the following reminders:");
-    for (int i = 0; i < reminders.length; i++) {
-      await Speaker.speak(reminders[i]);
+    for (final reminder in reminders) {
+      await Speaker.speak(reminder);
     }
     await Speaker.speak("Please, make sure you do not forget about them.");
   }
+
   void fetchReminders() async {
     setState(() {
       _isLoadingReminders = true;
     });
     try {
-
       final data = await ApiService.fetchReminders();
       setState(() {
         reminders = [
-          if (data['previous'] != null) 'Previous ${data['previous']}',
-          if (data['current'] != null) 'Current ${data['current']}',
-          if (data['next'] != null) 'Next ${data['next']}',
+          if (data['previous'] != null) 'Previous: ${data['previous']}',
+          if (data['current'] != null) 'Current: ${data['current']}',
+          if (data['next'] != null) 'Next: ${data['next']}',
         ];
+        _isLoadingReminders = false;
+        _error = '';
       });
       generateAudioOutput();
-
-    } catch(e) {
+    } catch (e) {
       setState(() {
-        _error = "An error occured trying to load the questions.";
+        _error = "An error occurred trying to load reminders.";
+        _isLoadingReminders = false;
       });
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     return Scaffold(
       appBar: AppBar(
-        title: Text("Caregiver Portal"),
+        title: Text(
+          "Caregiver Portal",
+          style: GoogleFonts.poppins(color: Colors.white, fontWeight: FontWeight.w600),
+        ),
         backgroundColor: Colors.deepPurple,
         foregroundColor: Colors.white,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Remote Controls",
-                style: Theme.of(context).textTheme.titleLarge),
-            SizedBox(height: 12),
+            Text(
+              "Remote Controls",
+              style: GoogleFonts.poppins(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.deepPurple.shade700,
+              ),
+            ),
+            const SizedBox(height: 12),
             SwitchListTile(
-              title: Text("Enable Location Tracking"),
+              title: Text("Enable Location Tracking", style: GoogleFonts.poppins(fontSize: 18)),
+              secondary: const Icon(Icons.location_on_outlined, color: Colors.deepPurple),
               value: locationTrackingEnabled,
-              onChanged: (val) {
-                setState(() => locationTrackingEnabled = val);
-              },
+              onChanged: (val) => setState(() => locationTrackingEnabled = val),
             ),
             SwitchListTile(
-              title: Text("Medication Reminders"),
+              title: Text("Medication Reminders", style: GoogleFonts.poppins(fontSize: 18)),
+              secondary: const Icon(Icons.medical_services_outlined, color: Colors.deepPurple),
               value: medicationRemindersOn,
-              onChanged: (val) {
-                setState(() => medicationRemindersOn = val);
-              },
+              onChanged: (val) => setState(() => medicationRemindersOn = val),
             ),
             SwitchListTile(
-              title: Text("Emergency Alerts"),
+              title: Text("Emergency Alerts", style: GoogleFonts.poppins(fontSize: 18)),
+              secondary: const Icon(Icons.warning_amber_outlined, color: Colors.redAccent),
               value: emergencyAlertsOn,
-              onChanged: (val) {
-                setState(() => emergencyAlertsOn = val);
-              },
+              onChanged: (val) => setState(() => emergencyAlertsOn = val),
             ),
-            Divider(height: 32),
-            Text("Reminders",
-                style: Theme.of(context).textTheme.titleLarge),
-            ...reminders.map((reminder) => ListTile(
-              leading: Icon(Icons.alarm),
-              title: Text(reminder),
-            )),
-            Divider(height: 32),
-            Text("Alerts", style: Theme.of(context).textTheme.titleLarge),
-            ...alerts.map((alert) => ListTile(
-              leading: Icon(Icons.warning, color: Colors.red),
-              title: Text(alert),
-            )),
+            const Divider(height: 40, thickness: 1.2),
+            Text(
+              "Reminders",
+              style: GoogleFonts.poppins(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.deepPurple.shade700,
+              ),
+            ),
+            const SizedBox(height: 8),
+            if (_isLoadingReminders)
+              Center(child: CircularProgressIndicator(color: Colors.deepPurple))
+            else if (_error.isNotEmpty)
+              Text(_error, style: GoogleFonts.poppins(color: Colors.red, fontSize: 16))
+            else if (reminders.isEmpty)
+                Text("No reminders at this time.", style: GoogleFonts.poppins(fontSize: 16))
+              else
+                ...reminders.map(
+                      (reminder) => ListTile(
+                    leading: const Icon(Icons.alarm, color: Colors.deepPurple),
+                    title: Text(reminder, style: GoogleFonts.poppins(fontSize: 18)),
+                  ),
+                ),
+            const Divider(height: 40, thickness: 1.2),
+            Text(
+              "Alerts",
+              style: GoogleFonts.poppins(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.deepPurple.shade700,
+              ),
+            ),
+            const SizedBox(height: 8),
+            ...alerts.map(
+                  (alert) => ListTile(
+                leading: const Icon(Icons.warning, color: Colors.redAccent),
+                title: Text(alert, style: GoogleFonts.poppins(fontSize: 18)),
+              ),
+            ),
           ],
         ),
       ),

@@ -77,72 +77,101 @@ class _LiveTranslationScreenState extends State<LiveTranslationScreen> {
     }
   }
 
-  Widget _buildDropdown(String value, ValueChanged<String?> onChanged) {
-    return DropdownButton<String>(
-      value: value,
-      onChanged: onChanged,
-      items: _languages.map((lang) {
-        return DropdownMenuItem(
-          value: lang,
-          child: Text(lang.toUpperCase()),
-        );
-      }).toList(),
+  Widget _buildDropdown(String value, ValueChanged<String?> onChanged, String label) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.deepPurple),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: DropdownButton<String>(
+            value: value,
+            onChanged: onChanged,
+            underline: const SizedBox(),
+            items: _languages.map((lang) {
+              return DropdownMenuItem(
+                value: lang,
+                child: Text(lang.toUpperCase(),
+                    style: const TextStyle(fontSize: 16)),
+              );
+            }).toList(),
+          ),
+        ),
+      ],
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Live Translator'),
+      appBar: AppBar(
+        title: const Text('Live Translator'),
         backgroundColor: Colors.deepPurple,
-        foregroundColor: Colors.white,),
+        foregroundColor: Colors.white,
+      ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
+        padding: const EdgeInsets.all(16),
+        child: ListView(
           children: [
             TextField(
               controller: _textController,
               decoration: InputDecoration(
                 labelText: 'Enter text or use microphone',
+                labelStyle: const TextStyle(fontSize: 16),
                 suffixIcon: IconButton(
                   icon: Icon(_isListening ? Icons.mic : Icons.mic_none),
                   onPressed: _listen,
                 ),
+                border: const OutlineInputBorder(),
               ),
             ),
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(
-                  children: [
-                    Text('From'),
-                    _buildDropdown(_sourceLang, (val) {
-                      if (val != null) setState(() => _sourceLang = val);
-                    }),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Text('To'),
-                    _buildDropdown(_targetLang, (val) {
-                      if (val != null) setState(() => _targetLang = val);
-                    }),
-                  ],
-                ),
+                Expanded(child: _buildDropdown(_sourceLang, (val) {
+                  if (val != null) setState(() => _sourceLang = val);
+                }, 'From')),
+                const SizedBox(width: 20),
+                Expanded(child: _buildDropdown(_targetLang, (val) {
+                  if (val != null) setState(() => _targetLang = val);
+                }, 'To')),
               ],
             ),
-            SizedBox(height: 16),
-            ElevatedButton(
+            const SizedBox(height: 24),
+            ElevatedButton.icon(
+              icon: const Icon(Icons.translate),
+              label: Text(_loading ? 'Translating...' : 'Translate'),
               onPressed: _loading ? null : _translate,
-              child: Text(_loading ? 'Translating...' : 'Translate'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.deepPurple,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                textStyle:
+                const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+              ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 24),
             if (_error != null)
-              Text('Error: $_error', style: TextStyle(color: Colors.red)),
+              Text('⚠️ Error: $_error',
+                  style: const TextStyle(color: Colors.red, fontSize: 16)),
             if (_translatedMessage.isNotEmpty)
-              Text(
-                'Translation: $_translatedMessage',
-                style: TextStyle(fontSize: 18),
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.deepPurple.shade50,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.deepPurple),
+                ),
+                child: Text(
+                  _translatedMessage,
+                  style: const TextStyle(fontSize: 18, color: Colors.black87),
+                ),
               ),
           ],
         ),

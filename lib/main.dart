@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'pages/all_options.dart';
-import 'pages/settings.dart';
-import 'pages/test.dart';
 import 'pages/home.dart';
 
 import 'pages/cognitive_support_and_memory_pages/main.dart';
@@ -30,11 +28,6 @@ import 'pages/accessibility_and_medical/live_translation_assistant.dart';
 import 'pages/accessibility_and_medical/speech_to_text_notes.dart';
 import 'pages/accessibility_and_medical/vitals_tracker.dart';
 
-
-import 'pages/hardware_addons_and_ergonomics/main.dart';
-import 'pages/hardware_addons_and_ergonomics/mount_stand_addon.dart';
-import 'pages/hardware_addons_and_ergonomics/popsocket_attachment.dart';
-import 'pages/hardware_addons_and_ergonomics/wrist_lanyard.dart';
 void main() {
   runApp(MyApp());
 }
@@ -50,7 +43,6 @@ class MyApp extends StatelessWidget {
         '/all-options': (context) => AllOptions(),
 
         '/cognitive-options-page': (context) => CognitiveHomePage(),
-        'cognitive-options-page/settings': (context) => SettingsPage(),
         'cognitive-options-page/dashboard': (context) => DashboardPage(),
         'cognitive-options-page/waid': (context) => WhatAmIDoingPage(),
         'cognitive-options-page/ai-check-in': (context) => AICheckInPage(),
@@ -76,12 +68,6 @@ class MyApp extends StatelessWidget {
         'accessibility-and-medical/speech-to-text-notes': (context) => SpeechToTextNotesPage(),
         'accessibility-and-medical/vitals-tracker': (context) => VitalsTrackerPage(),
 
-        '/hardware-addons-options-page' : (context) => HardwareAddonsRoutes(),
-        'hardware-addons-options-page/mount-stand-addon': (context) => MountStandAddOnPage(),
-        'hardware-addons-options-page/popsocket_attachment': (context) => PopsocketAttachmentPage(),
-        'hardware-addons-options-page/wrist-lanyard': (context) => WristLanyardPage(),
-
-        '/test': (context) => test()
       },
     );
   }

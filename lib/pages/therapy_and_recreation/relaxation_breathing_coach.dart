@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'package:google_fonts/google_fonts.dart';
 import '../../global/speaker.dart'; // Adjust path based on your project structure
 
 class BreathingExercisePage extends StatefulWidget {
@@ -85,7 +86,7 @@ class _BreathingExercisePageState extends State<BreathingExercisePage>
     return Scaffold(
       backgroundColor: Colors.deepPurple[50],
       appBar: AppBar(
-        title: const Text("Breathing Exercise"),
+        title: Text("Breathing Exercise", style: GoogleFonts.poppins(color: Colors.white)),
         backgroundColor: Colors.deepPurple,
         foregroundColor: Colors.white,
       ),
@@ -96,19 +97,31 @@ class _BreathingExercisePageState extends State<BreathingExercisePage>
             ScaleTransition(
               scale: _controller,
               child: Container(
-                width: 150,
-                height: 150,
+                width: 160,
+                height: 160,
                 decoration: BoxDecoration(
                   color: Colors.deepPurple,
                   shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.deepPurple.withOpacity(0.5),
+                      blurRadius: 20,
+                      spreadRadius: 5,
+                    ),
+                  ],
+                ),
+                child: const Icon(
+                  Icons.self_improvement,
+                  size: 80,
+                  color: Colors.white70,
                 ),
               ),
             ),
-            const SizedBox(height: 40),
+            const SizedBox(height: 50),
             Text(
               _instruction,
-              style: const TextStyle(
-                fontSize: 28,
+              style: GoogleFonts.poppins(
+                fontSize: 30,
                 fontWeight: FontWeight.bold,
                 color: Colors.deepPurple,
               ),
@@ -116,7 +129,7 @@ class _BreathingExercisePageState extends State<BreathingExercisePage>
             const SizedBox(height: 20),
             Text(
               'Time Remaining: ${_totalTime - _elapsed}s',
-              style: const TextStyle(fontSize: 18),
+              style: GoogleFonts.poppins(fontSize: 18, color: Colors.deepPurple[700]),
             ),
           ],
         ),

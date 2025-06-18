@@ -1,39 +1,70 @@
 import 'package:flutter/material.dart';
 
 class AccessibilityAndMedicalRoutes extends StatelessWidget {
-  final List<Map<String, String>> pages = [
-    {'title': 'AI Symptom Reporter', 'route': 'accessibility-and-medical/ai-symptom-reporter'},
-    {'title': 'Hearing AID Companion', 'route': 'accessibility-and-medical/hearing-aid-companion'},
-    {'title': 'Live Translation Assistant', 'route': 'accessibility-and-medical/live-translation-assistant'},
-    {'title': 'Speech To Text Notes', 'route': 'accessibility-and-medical/speech-to-text-notes'},
-    {'title': 'Vitals Tracker', 'route': 'accessibility-and-medical/vitals-tracker'},
+  final List<Map<String, dynamic>> pages = [
+    {
+      'title': 'AI Symptom Reporter',
+      'route': 'accessibility-and-medical/ai-symptom-reporter',
+      'icon': Icons.medical_services,
+    },
+    {
+      'title': 'Hearing AID Companion',
+      'route': 'accessibility-and-medical/hearing-aid-companion',
+      'icon': Icons.hearing,
+    },
+    {
+      'title': 'Live Translation Assistant',
+      'route': 'accessibility-and-medical/live-translation-assistant',
+      'icon': Icons.translate,
+    },
+    {
+      'title': 'Speech To Text Notes',
+      'route': 'accessibility-and-medical/speech-to-text-notes',
+      'icon': Icons.mic,
+    },
+    {
+      'title': 'Vitals Tracker',
+      'route': 'accessibility-and-medical/vitals-tracker',
+      'icon': Icons.favorite,
+    },
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Accessibility & Medical'),
-        backgroundColor: Colors.deepPurple,
-        foregroundColor: Colors.white,),
-      body: ListView.builder(
-        padding: EdgeInsets.all(16),
-        itemCount: pages.length,
-        itemBuilder: (context, index) => Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              padding: EdgeInsets.symmetric(vertical: 16),
-              backgroundColor: Colors.deepPurple,
-              foregroundColor: Colors.white,
-              textStyle: TextStyle(fontSize: 18),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-            ),
-            child: Text(pages[index]['title']!),
-            onPressed: () {
-              Navigator.pushNamed(context, pages[index]['route']!);
-            },
-          ),
+      appBar: AppBar(
+        title: const Text(
+          'Accessibility & Medical',
+          style: TextStyle(color: Colors.white),
         ),
+        backgroundColor: Colors.deepPurple,
+        foregroundColor: Colors.white,
+      ),
+      body: ListView.builder(
+        padding: const EdgeInsets.all(16),
+        itemCount: pages.length,
+        itemBuilder: (context, index) {
+          final page = pages[index];
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: ElevatedButton.icon(
+              icon: Icon(page['icon'], size: 28),
+              label: Text(
+                page['title'],
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+              ),
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+                backgroundColor: Colors.deepPurple,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+              ),
+              onPressed: () => Navigator.pushNamed(context, page['route']),
+            ),
+          );
+        },
       ),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../services/api_services.dart';
 import '../../global/speaker.dart';
 
@@ -10,7 +11,6 @@ class AICheckInPage extends StatefulWidget {
 }
 
 class _AICheckInPage extends State<AICheckInPage> {
-
   List<String> questions = [];
   bool _isLoading = false;
   String _error = '';
@@ -27,29 +27,28 @@ class _AICheckInPage extends State<AICheckInPage> {
     fetchQuestionsData();
   }
 
-
-
-
   void fetchQuestionsData() async {
     setState(() {
       _isLoading = true;
+      _error = '';
     });
     try {
-
       final data = await ApiService.fetchAiCheckIn();
+      final qList = List<String>.from(data['questions']);
+
       setState(() {
-        questions = List<String>.from(data['questions']);
+        questions = qList;
+        _isLoading = false;
       });
 
-      for (final question in questions) {
+      for (final question in qList) {
         await Speaker.speak(question);
-        Future.delayed(Duration(seconds: 2));
+        await Future.delayed(Duration(seconds: 2));
       }
-
-
-    } catch(e) {
+    } catch (e) {
       setState(() {
-        _error = "An error occured trying to load the questions.";
+        _error = "An error occurred trying to load the questions.";
+        _isLoading = false;
       });
     }
   }
@@ -57,17 +56,44 @@ class _AICheckInPage extends State<AICheckInPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('AI Check-In'),
+      appBar: AppBar(
+        title: Text(
+          'AI Check-In',
+          style: GoogleFonts.poppins(color: Colors.white),
+        ),
         backgroundColor: Colors.deepPurple,
-        foregroundColor: Colors.white
+        foregroundColor: Colors.white,
+        actions: [
+          Icon(Icons.mic, color: Colors.white), // Optional: Mic icon
+          SizedBox(width: 16),
+        ],
       ),
-      body: ListView.builder(
+      body: _isLoading
+          ? Center(child: CircularProgressIndicator())
+          : _error.isNotEmpty
+          ? Center(
+        child: Text(
+          _error,
+          style: GoogleFonts.poppins(
+            fontSize: 16,
+            color: Colors.red,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      )
+          : ListView.builder(
         padding: EdgeInsets.all(16),
         itemCount: questions.length,
         itemBuilder: (context, index) => Card(
+          elevation: 4,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12)),
           child: Padding(
             padding: EdgeInsets.all(16.0),
-            child: Text(questions[index], style: TextStyle(fontSize: 18)),
+            child: Text(
+              questions[index],
+              style: GoogleFonts.poppins(fontSize: 18),
+            ),
           ),
         ),
       ),

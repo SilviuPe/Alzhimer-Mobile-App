@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
 import 'dart:math';
-
+import 'package:flutter/material.dart';
 import '../../global/speaker.dart';
 
 class VirtualPetCompanionPage extends StatefulWidget {
@@ -16,7 +15,7 @@ class _PetGameScreenState extends State<VirtualPetCompanionPage> {
   int happiness = 50; // 0 = sad, 100 = very happy
   int energy = 50; // 0 = tired, 100 = full of energy
 
-
+  bool _alertIsShowing = false; // Prevent multiple dialogs
 
   @override
   void dispose() {
@@ -60,6 +59,10 @@ class _PetGameScreenState extends State<VirtualPetCompanionPage> {
   }
 
   void _showAlert(String message) {
+    if (_alertIsShowing) return;
+
+    _alertIsShowing = true;
+
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
@@ -67,7 +70,10 @@ class _PetGameScreenState extends State<VirtualPetCompanionPage> {
         content: Text(message),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () {
+              _alertIsShowing = false;
+              Navigator.pop(context);
+            },
             child: const Text('OK'),
           ),
         ],
@@ -85,7 +91,10 @@ class _PetGameScreenState extends State<VirtualPetCompanionPage> {
 
   @override
   Widget build(BuildContext context) {
-    checkStatus();
+    // Schedule checkStatus after this frame finishes
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      checkStatus();
+    });
 
     return Scaffold(
       appBar: AppBar(
@@ -97,8 +106,10 @@ class _PetGameScreenState extends State<VirtualPetCompanionPage> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Text('🐾 Meet your pet: $petName',
-                style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+            Text(
+              '🐾 Meet your pet: $petName',
+              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 20),
             _buildStatBar('Hunger', hunger, Colors.red),
             _buildStatBar('Happiness', happiness, Colors.green),
@@ -110,18 +121,27 @@ class _PetGameScreenState extends State<VirtualPetCompanionPage> {
               children: [
                 ElevatedButton.icon(
                   onPressed: feed,
-                  icon: const Icon(Icons.restaurant),
-                  label: const Text('Feed'),
+                  icon: const Icon(Icons.restaurant, color: Colors.white),
+                  label: const Text('Feed', style: TextStyle(color: Colors.white)),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.deepPurple,
+                  ),
                 ),
                 ElevatedButton.icon(
                   onPressed: play,
-                  icon: const Icon(Icons.toys),
-                  label: const Text('Play'),
+                  icon: const Icon(Icons.toys, color: Colors.white),
+                  label: const Text('Play', style: TextStyle(color: Colors.white)),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.deepPurple,
+                  ),
                 ),
                 ElevatedButton.icon(
                   onPressed: rest,
-                  icon: const Icon(Icons.bedtime),
-                  label: const Text('Rest'),
+                  icon: const Icon(Icons.bedtime, color: Colors.white),
+                  label: const Text('Rest', style: TextStyle(color: Colors.white)),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.deepPurple,
+                  ),
                 ),
               ],
             ),

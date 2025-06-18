@@ -53,10 +53,10 @@ class _SpeechToTextNotesPage extends State<SpeechToTextNotesPage> {
     try {
       await ApiService.sendNotes(note: note);
       _noteController.clear();
-      _fetchNotes(); // Refresh notes list
+      _fetchNotes();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to send note.')),
+        const SnackBar(content: Text('Failed to send note.')),
       );
     }
   }
@@ -88,58 +88,82 @@ class _SpeechToTextNotesPage extends State<SpeechToTextNotesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Caregiver Portal"),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
+        title: const Text("Caregiver Notes"),
         backgroundColor: Colors.deepPurple,
         foregroundColor: Colors.white,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
+        ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         child: Column(
           children: [
             TextField(
               controller: _noteController,
+              maxLines: null,
               decoration: InputDecoration(
                 labelText: 'Speak or type your note',
+                labelStyle: const TextStyle(fontSize: 16),
+                border: const OutlineInputBorder(),
                 suffixIcon: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     IconButton(
-                      icon: Icon(Icons.mic,
-                          color: _isListening ? Colors.red : null),
+                      icon: Icon(
+                        _isListening ? Icons.mic : Icons.mic_none,
+                        color: _isListening ? Colors.red : Colors.deepPurple,
+                      ),
                       onPressed: _listen,
                     ),
                     IconButton(
-                      icon: Icon(Icons.send),
+                      icon: const Icon(Icons.send),
                       onPressed: _sendNote,
+                      color: Colors.deepPurple,
                     ),
                   ],
                 ),
               ),
               onSubmitted: (_) => _sendNote(),
             ),
-            SizedBox(height: 20),
-            Text("Saved Notes", style: Theme.of(context).textTheme.titleLarge),
-            SizedBox(height: 10),
-            if (_loading)
-              CircularProgressIndicator()
-            else if (_error != null)
-              Text(_error!, style: TextStyle(color: Colors.red))
-            else if (_notes.isEmpty)
-                Text('No notes found.')
-              else
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: _notes.length,
-                    itemBuilder: (context, index) => ListTile(
-                      leading: Icon(Icons.note),
-                      title: Text(_notes[index]),
-                    ),
+            const SizedBox(height: 20),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "Saved Notes",
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+            Expanded(
+              child: _loading
+                  ? const Center(child: CircularProgressIndicator())
+                  : _error != null
+                  ? Center(
+                child: Text(
+                  _error!,
+                  style: const TextStyle(color: Colors.red),
+                ),
+              )
+                  : _notes.isEmpty
+                  ? const Center(child: Text('No notes found.'))
+                  : ListView.separated(
+                itemCount: _notes.length,
+                separatorBuilder: (_, __) =>
+                const Divider(height: 16),
+                itemBuilder: (context, index) => ListTile(
+                  leading: const Icon(Icons.sticky_note_2,
+                      color: Colors.deepPurple),
+                  title: Text(
+                    _notes[index],
+                    style: const TextStyle(fontSize: 16),
                   ),
                 ),
+              ),
+            ),
           ],
         ),
       ),

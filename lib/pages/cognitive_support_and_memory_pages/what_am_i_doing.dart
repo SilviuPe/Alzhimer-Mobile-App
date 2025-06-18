@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../services/api_services.dart'; // Adjust the path to your ApiService file
+import 'package:google_fonts/google_fonts.dart';
+import '../../services/api_services.dart';
 import '../../global/speaker.dart';
 
 class WhatAmIDoingPage extends StatefulWidget {
@@ -37,11 +38,7 @@ class _WhatAmIDoingPageState extends State<WhatAmIDoingPage> {
 
     Speaker.speak(_activityMessage);
 
-    if (_activityMessage != null) {
-      _showContextReminder(context, _activityMessage!);
-    } else if (_error != null) {
-      _showContextReminder(context, _error!);
-    }
+    _showContextReminder(context, _error ?? _activityMessage);
   }
 
   @override
@@ -56,17 +53,17 @@ class _WhatAmIDoingPageState extends State<WhatAmIDoingPage> {
       builder: (_) => AlertDialog(
         backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text(
+        title: Text(
           'Activity Reminder',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         content: Text(
           message,
-          style: const TextStyle(fontSize: 16),
+          style: GoogleFonts.poppins(fontSize: 16),
         ),
         actions: [
           TextButton(
-            child: const Text('OK', style: TextStyle(color: Colors.deepPurple)),
+            child: Text('OK', style: GoogleFonts.poppins(color: Colors.deepPurple)),
             onPressed: () => Navigator.of(context).pop(),
           )
         ],
@@ -79,9 +76,13 @@ class _WhatAmIDoingPageState extends State<WhatAmIDoingPage> {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
       appBar: AppBar(
-        title: const Text('What Am I Doing?'),
+        title: Text('What Am I Doing?', style: GoogleFonts.poppins(color: Colors.white)),
         backgroundColor: Colors.deepPurple,
         foregroundColor: Colors.white,
+        actions: const [
+          Icon(Icons.directions_run, color: Colors.white),
+          SizedBox(width: 12),
+        ],
       ),
       body: Center(
         child: Card(
@@ -94,20 +95,22 @@ class _WhatAmIDoingPageState extends State<WhatAmIDoingPage> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text(
+                Text(
                   'Tap to Find Out',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
+                  style: GoogleFonts.poppins(fontSize: 24, fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 30),
                 ElevatedButton.icon(
-                  icon: const Icon(Icons.lightbulb_outline, size: 28, color:Colors.white),
+                  icon: const Icon(Icons.lightbulb_outline, size: 28, color: Colors.white),
                   label: _isLoading
-                      ? const CircularProgressIndicator(
-                    color: Colors.white,
+                      ? const SizedBox(
+                    height: 24,
+                    width: 24,
+                    child: CircularProgressIndicator(color: Colors.white, strokeWidth: 3),
                   )
-                      : const Text(
+                      : Text(
                     'What Am I Doing?',
-                    style: TextStyle(fontSize: 20, color:Colors.white),
+                    style: GoogleFonts.poppins(fontSize: 20, color: Colors.white),
                   ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.deepPurple,

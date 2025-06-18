@@ -10,18 +10,28 @@ class SimpleDrawingTool extends StatefulWidget {
 }
 
 class _SimpleDrawingToolState extends State<SimpleDrawingTool> {
-  List<_DrawPoint?> points = [];
-  bool isErasing = false;
+  final List<_DrawPoint?> _points = [];
+  bool _isErasing = false;
 
   void _toggleEraser() {
     setState(() {
-      isErasing = !isErasing;
+      _isErasing = !_isErasing;
     });
   }
 
   void _clearCanvas() {
     setState(() {
-      points.clear();
+      _points.clear();
+    });
+  }
+
+  void _addPoint(Offset offset) {
+    setState(() {
+      _points.add(_DrawPoint(
+        position: offset,
+        color: _isErasing ? Colors.white : Colors.deepPurple,
+        strokeWidth: _isErasing ? 20.0 : 4.0,
+      ));
     });
   }
 
@@ -29,7 +39,10 @@ class _SimpleDrawingToolState extends State<SimpleDrawingTool> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(isErasing ? 'Eraser Mode' : 'Drawing Tool', style: TextStyle(color: Colors.white)),
+        title: Text(
+          _isErasing ? 'Eraser Mode' : 'Drawing Tool',
+          style: const TextStyle(color: Colors.white),
+        ),
         backgroundColor: Colors.deepPurple,
         foregroundColor: Colors.white,
         actions: [
@@ -37,31 +50,25 @@ class _SimpleDrawingToolState extends State<SimpleDrawingTool> {
             icon: const Icon(Icons.brush),
             tooltip: 'Toggle Eraser',
             onPressed: _toggleEraser,
-              color: Colors.white
+            color: Colors.white,
           ),
           IconButton(
             icon: const Icon(Icons.clear),
             tooltip: 'Clear Canvas',
             onPressed: _clearCanvas,
-            color: Colors.white
+            color: Colors.white,
           ),
         ],
       ),
       body: GestureDetector(
         onPanUpdate: (details) {
-          RenderBox renderBox = context.findRenderObject() as RenderBox;
-          Offset localPos = renderBox.globalToLocal(details.globalPosition);
-          setState(() {
-            points.add(_DrawPoint(
-              position: localPos,
-              color: isErasing ? Colors.white : Colors.deepPurple,
-              strokeWidth: isErasing ? 20.0 : 4.0,
-            ));
-          });
+          final RenderBox renderBox = context.findRenderObject() as RenderBox;
+          final Offset localPos = renderBox.globalToLocal(details.globalPosition);
+          _addPoint(localPos);
         },
-        onPanEnd: (_) => setState(() => points.add(null)),
+        onPanEnd: (_) => setState(() => _points.add(null)),
         child: CustomPaint(
-          painter: _DrawingPainter(points),
+          painter: _DrawingPainter(_points),
           size: Size.infinite,
         ),
       ),
@@ -74,11 +81,16 @@ class _DrawPoint {
   final Color color;
   final double strokeWidth;
 
-  _DrawPoint({required this.position, required this.color, required this.strokeWidth});
+  _DrawPoint({
+    required this.position,
+    required this.color,
+    required this.strokeWidth,
+  });
 }
 
 class _DrawingPainter extends CustomPainter {
   final List<_DrawPoint?> points;
+
   _DrawingPainter(this.points);
 
   @override
@@ -97,5 +109,5 @@ class _DrawingPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_DrawingPainter oldDelegate) => true;
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
