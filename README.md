@@ -1,16 +1,25 @@
-# flutter_application_1
+# 🧠 Alzheimer Mobile App  
 
-A new Flutter project.
+---
 
-## Getting Started
+### 📖 Description  
 
-This project is a starting point for a Flutter application.
+A client requested a **mobile frontend application** designed to support patients with Alzheimer’s in their day-to-day lives 💙.  
+The app provides helpful features such as:  
 
-A few resources to get you started if this is your first Flutter project:
+- ⏰ Reminders  
+- 🔔 Alarms  
+- 🎮 Games to calm / train the mind  
+- 📞 Urgent calls  
+- 🎙️ Voice commands  
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+---
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### 🛠️ Tech Stack  
+
+- 📱 Frontend: **Dart / Flutter**  
+- 🎨 UX/UI: **Figma**  
+
+---
+
+Building tools with a **real human impact** is one of the most rewarding experiences 🙌.  
